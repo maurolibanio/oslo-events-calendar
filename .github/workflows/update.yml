@@ -34,12 +34,17 @@ jobs:
         run: |
           python src/generate_ics.py
 
+      - name: Create heartbeat
+        run: |
+          date -u > last-run.txt
+
       - name: Commit updates
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
           git add docs/oslo-all.ics
+          git add last-run.txt
 
           git diff --staged --quiet || git commit -m "Update calendar"
 
