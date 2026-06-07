@@ -107,7 +107,7 @@ for item in events:
 
     if openings:
 
-        for idx, opening in enumerate(openings):
+        for opening in openings:
 
             try:
 
@@ -202,10 +202,15 @@ for item in events:
 
                 if event_id:
 
+                    uid = (
+                        f"{event_id}-"
+                        f"{start_dt.strftime('%Y%m%d%H%M%S')}"
+                        "@oslo-events-calendar"
+                    )
+
                     event.add(
                         "uid",
-                        f"{event_id}-{idx}"
-                        "@oslo-events-calendar"
+                        uid
                     )
 
                 if url:
@@ -310,10 +315,15 @@ for item in events:
 
             if event_id:
 
+                uid = (
+                    f"{event_id}-"
+                    f"{start_dt.strftime('%Y%m%d%H%M%S')}"
+                    "@oslo-events-calendar"
+                )
+
                 event.add(
                     "uid",
-                    f"{event_id}"
-                    "@oslo-events-calendar"
+                    uid
                 )
 
             if url:
