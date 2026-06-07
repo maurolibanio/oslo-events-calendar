@@ -1,164 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Oslo Events Calendar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Inter, Arial, sans-serif;
-            background: linear-gradient(
-                135deg,
-                #0f172a,
-                #1e293b
-            );
-            color: white;
-            min-height: 100vh;
+<title>Oslo Events Calendar</title>
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        .container {
-            max-width: 900px;
-            padding: 40px;
-            text-align: center;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+<style>
 
-        p {
-            color: #cbd5e1;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
+:root {
+    --bg: #0f172a;
+    --card: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.12);
+    --text: #ffffff;
+    --muted: #cbd5e1;
+    --accent: #3b82f6;
+}
 
-        .card {
-            margin-top: 40px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
+body {
 
-        .button {
-            text-decoration: none;
-            color: white;
-            background: #2563eb;
-            padding: 14px 22px;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
+    font-family: "Inter", sans-serif;
 
-        .button:hover {
-            transform: translateY(-2px);
-        }
+    background:
+        radial-gradient(circle at top left, #1e3a8a, transparent 35%),
+        radial-gradient(circle at bottom right, #0f766e, transparent 35%),
+        #0f172a;
 
-        .secondary {
-            background: #334155;
-        }
+    color: var(--text);
 
-        .feed {
-            margin-top: 30px;
-            padding: 15px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.05);
-            word-break: break-all;
-            color: #93c5fd;
-        }
+    min-height: 100vh;
 
-        footer {
-            margin-top: 40px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    </style>
+    padding: 24px;
+}
+
+.container {
+
+    width: 100%;
+    max-width: 900px;
+
+    text-align: center;
+}
+
+.hero {
+
+    background: var(--card);
+
+    backdrop-filter: blur(18px);
+
+    border: 1px solid var(--border);
+
+    border-radius: 32px;
+
+    padding: 60px 40px;
+}
+
+.badge {
+
+    display: inline-block;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.08);
+
+    margin-bottom: 24px;
+
+    font-size: 14px;
+}
+
+h1 {
+
+    font-size: clamp(
+        3rem,
+        6vw,
+        5rem
+    );
+
+    font-weight: 800;
+
+    margin-bottom: 20px;
+}
+
+.subtitle {
+
+    max-width: 700px;
+
+    margin: auto;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+
+    font-size: 1.15rem;
+}
+
+.stats {
+
+    margin-top: 40px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 16px;
+
+    flex-wrap: wrap;
+}
+
+.stat {
+
+    background: rgba(255,255,255,0.06);
+
+    border-radius: 18px;
+
+    padding: 14px 20px;
+
+    min-width: 180px;
+}
+
+.stat strong {
+
+    display: block;
+
+    font-size: 1.4rem;
+}
+
+.button {
+
+    margin-top: 40px;
+
+    border: none;
+
+    cursor: pointer;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    padding: 18px 34px;
+
+    border-radius: 18px;
+
+    transition: all .2s ease;
+}
+
+.button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 30px rgba(59,130,246,.35);
+}
+
+.feed {
+
+    margin-top: 28px;
+
+    color: #93c5fd;
+
+    font-size: .95rem;
+
+    word-break: break-word;
+}
+
+.features {
+
+    margin-top: 40px;
+
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(200px,1fr)
+    );
+
+    gap: 16px;
+}
+
+.feature {
+
+    background: rgba(255,255,255,0.05);
+
+    padding: 18px;
+
+    border-radius: 18px;
+}
+
+.toast {
+
+    position: fixed;
+
+    bottom: 24px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(0,0,0,.85);
+
+    color: white;
+
+    padding: 14px 20px;
+
+    border-radius: 12px;
+
+    opacity: 0;
+
+    transition: .25s;
+
+    pointer-events: none;
+}
+
+.toast.show {
+
+    opacity: 1;
+}
+
+.footer {
+
+    margin-top: 30px;
+
+    color: #94a3b8;
+
+    font-size: .9rem;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🎉 Oslo Events Calendar</h1>
+    <div class="hero">
 
-    <p>
-        Subscribe to Oslo's events directly from your favorite calendar app.
-        Stay up to date with concerts, festivals, exhibitions, markets,
-        sports events and more.
-    </p>
+        <div class="badge">
+            🎉 Community Project
+        </div>
 
-    <div class="card">
+        <h1>
+            Oslo Events Calendar
+        </h1>
 
-        <div class="buttons">
+        <p class="subtitle">
+            Subscribe to concerts, festivals, exhibitions,
+            markets, sports and cultural events happening in Oslo.
+            Updated automatically and compatible with Google Calendar.
+        </p>
 
-            <a
-                class="button"
-                href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl"
-                target="_blank">
-                📅 Add to Google Calendar
-            </a>
+        <div class="stats">
 
-            <a
-                class="button secondary"
-                href="webcal://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics">
-                🍎 Apple Calendar
-            </a>
+            <div class="stat">
+                <strong>1200+</strong>
+                Events
+            </div>
 
-            <a
-                class="button secondary"
-                href="webcal://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics">
-                📆 Outlook
-            </a>
+            <div class="stat">
+                <strong>365 days</strong>
+                Rolling window
+            </div>
 
-            <button
-                class="button secondary"
-                onclick="copyFeed()">
-                🔗 Copy Feed URL
-            </button>
+            <div class="stat">
+                <strong>Automatic</strong>
+                Updates
+            </div>
 
         </div>
 
-        <div class="feed" id="feedUrl">
+        <button
+            class="button"
+            onclick="subscribe()">
+
+            📅 Add to Google Calendar
+
+        </button>
+
+        <div class="feed">
             https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics
+        </div>
+
+        <div class="features">
+
+            <div class="feature">
+                ✓ Automatically updated
+            </div>
+
+            <div class="feature">
+                ✓ Open source
+            </div>
+
+            <div class="feature">
+                ✓ Works on desktop and mobile
+            </div>
+
+            <div class="feature">
+                ✓ Free forever
+            </div>
+
+        </div>
+
+        <div class="footer">
+
+            Personal non-commercial project.<br>
+            Not affiliated with Visit Oslo.
+
         </div>
 
     </div>
 
-    <footer>
-        Personal non-commercial project.<br>
-        Not affiliated with Visit Oslo.
-    </footer>
+</div>
 
+<div
+    id="toast"
+    class="toast">
 </div>
 
 <script>
 
-function copyFeed() {
+const FEED_URL =
+    "https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics";
 
-    const url =
-        "https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics";
+async function subscribe() {
 
-    navigator.clipboard.writeText(url);
+    try {
 
-    alert("Calendar feed URL copied.");
+        await navigator.clipboard.writeText(
+            FEED_URL
+        );
+
+    } catch(e) {}
+
+    window.open(
+        "https://calendar.google.com/calendar/u/0/r/settings/addbyurl",
+        "_blank"
+    );
+
+    showToast(
+        "Feed URL copied. Paste it into Google Calendar and click 'Add calendar'."
+    );
+}
+
+function showToast(text) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        text;
+
+    toast.classList.add(
+        "show"
+    );
+
+    setTimeout(
+        () => toast.classList.remove(
+            "show"
+        ),
+        5000
+    );
 }
 
 </script>
