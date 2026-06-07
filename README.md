@@ -6,6 +6,10 @@ A free public calendar feed that automatically synchronizes events from Visit Os
 
 This project is a personal, non-commercial initiative created and maintained independently by its author.
 
+It is not affiliated with, endorsed by, sponsored by, or maintained by Visit Oslo.
+
+All event information remains the property of its respective owners and is sourced from publicly available data provided by Visit Oslo.
+
 The purpose of this project is to make publicly available event information easier to consume through standard calendar applications by providing an automatically generated iCalendar (ICS) feed.
 
 This project:
@@ -95,27 +99,6 @@ As a result, newly added events may not appear immediately even though the feed 
 
 ---
 
-## Included Event Categories
-
-The feed currently includes events from multiple Visit Oslo categories, including:
-
-* Concerts
-* Festivals
-* Dance
-* Ballet
-* Opera
-* Theatre
-* Family Events
-* Major Events
-* Markets & Fairs
-* Shows
-* Stand-up Comedy
-* Classical Music
-* Jazz
-* Rock & Pop
-
----
-
 ## Project Architecture
 
 ```text
@@ -131,61 +114,6 @@ GitHub Pages
        ↓
 Google Calendar / Apple Calendar / Outlook
 ```
-
----
-
-## Repository Structure
-
-```text
-oslo-events-calendar
-
-├── .github/
-│   └── workflows/
-│       └── update.yml
-│
-├── src/
-│   ├── fetch_events.py
-│   └── generate_ics.py
-│
-├── docs/
-│   ├── index.html
-│   └── oslo-all.ics
-│
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Roadmap
-
-Planned additional feeds:
-
-* Oslo Free Events
-* Oslo Concerts
-* Oslo Festivals
-* Oslo Family Events
-* Oslo Theatre & Opera
-* Oslo Classical Music
-
-Potential future integrations:
-
-* Meetup
-* Eventbrite
-* StartupLab
-* Oslo Tech Events
-* Cybersecurity Meetups
-* University of Oslo Events
-
----
-
-## Disclaimer
-
-This project is an independent community initiative.
-
-It is not affiliated with, endorsed by, sponsored by, or maintained by Visit Oslo.
-
-All event information remains the property of its respective owners and is sourced from publicly available data provided by Visit Oslo.
 
 ---
 
