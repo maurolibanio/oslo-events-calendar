@@ -44,7 +44,7 @@ https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics
 4. Paste the calendar URL.
 5. Click **Add calendar**.
 
-### Apple Calendar (iPhone, iPad, Mac)
+### Apple Calendar
 
 1. Open Calendar.
 2. Select **Add Subscription Calendar**.
