@@ -1,0 +1,46 @@
+name: Update Oslo Events Calendar
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-calendar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Download events
+        run: |
+          python src/fetch_events.py
+
+      - name: Generate ICS
+        run: |
+          python src/generate_ics.py
+
+      - name: Commit updates
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add docs/oslo-all.ics
+
+          git diff --staged --quiet || git commit -m "Update calendar"
+
+          git push
