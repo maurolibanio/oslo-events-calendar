@@ -1,10 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Oslo Events Calendar</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b
+            );
+            color: white;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .card {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .button {
+            text-decoration: none;
+            color: white;
+            background: #2563eb;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .secondary {
+            background: #334155;
+        }
+
+        .feed {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            word-break: break-all;
+            color: #93c5fd;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+    </style>
 </head>
+
 <body>
-    <h1>Oslo Events Calendar</h1>
-    <p>Calendar feed coming soon.</p>
+
+<div class="container">
+
+    <h1>🎉 Oslo Events Calendar</h1>
+
+    <p>
+        Subscribe to Oslo's events directly from your favorite calendar app.
+        Stay up to date with concerts, festivals, exhibitions, markets,
+        sports events and more.
+    </p>
+
+    <div class="card">
+
+        <div class="buttons">
+
+            <a
+                class="button"
+                href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl"
+                target="_blank">
+                📅 Add to Google Calendar
+            </a>
+
+            <a
+                class="button secondary"
+                href="webcal://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics">
+                🍎 Apple Calendar
+            </a>
+
+            <a
+                class="button secondary"
+                href="webcal://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics">
+                📆 Outlook
+            </a>
+
+            <button
+                class="button secondary"
+                onclick="copyFeed()">
+                🔗 Copy Feed URL
+            </button>
+
+        </div>
+
+        <div class="feed" id="feedUrl">
+            https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics
+        </div>
+
+    </div>
+
+    <footer>
+        Personal non-commercial project.<br>
+        Not affiliated with Visit Oslo.
+    </footer>
+
+</div>
+
+<script>
+
+function copyFeed() {
+
+    const url =
+        "https://maurolibanio.github.io/oslo-events-calendar/oslo-all.ics";
+
+    navigator.clipboard.writeText(url);
+
+    alert("Calendar feed URL copied.");
+}
+
+</script>
+
 </body>
 </html>
