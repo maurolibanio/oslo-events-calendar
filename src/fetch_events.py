@@ -5,9 +5,7 @@ from datetime import date, timedelta
 today = date.today()
 future = today + timedelta(days=365)
 
-BASE_URL = (
-    "https://www.visitoslo.com/api/eventlist/events"
-)
+BASE_URL = "https://www.visitoslo.com/api/eventlist/events"
 
 CATEGORY_IDS = (
     "505552,506042,507212,507232,"
@@ -19,6 +17,7 @@ CATEGORY_IDS = (
 
 all_events = []
 offset = 0
+total_results = None
 
 while True:
 
@@ -34,31 +33,42 @@ while True:
 
     print(f"Fetching offset={offset}")
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=60)
     response.raise_for_status()
 
     data = response.json()
 
+    if total_results is None:
+        total_results = data.get("totalResults", 0)
+        print(f"Total results reported by API: {total_results}")
+
     events = data.get("events", [])
 
-    if not events:
+    if len(events) == 0:
         break
 
     all_events.extend(events)
 
-    offset += len(events)
-
     print(
         f"Collected {len(all_events)} "
-        f"of {data.get('totalResults')}"
+        f"of {total_results}"
     )
+
+    offset += len(events)
+
+    if len(all_events) >= total_results:
+        break
 
 output = {
     "totalResults": len(all_events),
     "events": all_events
 }
 
-with open("events.json", "w", encoding="utf-8") as f:
+with open(
+    "events.json",
+    "w",
+    encoding="utf-8"
+) as f:
     json.dump(
         output,
         f,
