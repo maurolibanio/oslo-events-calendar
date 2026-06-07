@@ -5,33 +5,68 @@ from datetime import date, timedelta
 today = date.today()
 future = today + timedelta(days=365)
 
-url = (
+BASE_URL = (
     "https://www.visitoslo.com/api/eventlist/events"
-    "?pageId=837"
-    "&language=en"
-    "&offset=0"
-    "&CategoryIds=505552,506042,507212,507232,"
-    "505772,506922,506802,519862,506032,"
-    "513572,506232,505792,500602,"
-    "508172,508182,502032,507222,509172"
-    f"&FromDate={today.isoformat()}"
-    f"&ToDate={future.isoformat()}"
 )
 
-response = requests.get(url)
-response.raise_for_status()
+CATEGORY_IDS = (
+    "505552,506042,507212,507232,"
+    "505772,506922,506802,519862,"
+    "506032,513572,506232,505792,"
+    "500602,508172,508182,502032,"
+    "507222,509172"
+)
 
-data = response.json()
+all_events = []
+offset = 0
+
+while True:
+
+    url = (
+        f"{BASE_URL}"
+        f"?pageId=837"
+        f"&language=en"
+        f"&offset={offset}"
+        f"&CategoryIds={CATEGORY_IDS}"
+        f"&FromDate={today.isoformat()}"
+        f"&ToDate={future.isoformat()}"
+    )
+
+    print(f"Fetching offset={offset}")
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    data = response.json()
+
+    events = data.get("events", [])
+
+    if not events:
+        break
+
+    all_events.extend(events)
+
+    offset += len(events)
+
+    print(
+        f"Collected {len(all_events)} "
+        f"of {data.get('totalResults')}"
+    )
+
+output = {
+    "totalResults": len(all_events),
+    "events": all_events
+}
 
 with open("events.json", "w", encoding="utf-8") as f:
     json.dump(
-        data,
+        output,
         f,
         ensure_ascii=False,
         indent=2
     )
 
 print(
-    f"Downloaded {len(data['events'])} events "
-    f"from {today} to {future}"
+    f"Finished. Saved "
+    f"{len(all_events)} events."
 )
