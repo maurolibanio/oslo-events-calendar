@@ -1,6 +1,6 @@
 # Oslo Events Calendar
 
-A free public calendar feed that automatically synchronizes events from Visit Oslo and makes them available through a standard iCalendar (ICS) subscription. Not all filters enabled, working on it - but most of events already being populated. :)
+A free public calendar feed that automatically synchronizes events from Visit Oslo and makes them available through a standard iCalendar (ICS) subscription.
 
 ## Disclaimer
 
