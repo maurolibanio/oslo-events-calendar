@@ -11,6 +11,8 @@ from icalendar import (
     Event
 )
 
+VISIT_OSLO_BASE = "https://www.visitoslo.com"
+
 cal = Calendar()
 
 cal.add(
@@ -77,9 +79,26 @@ for item in events:
 
     if url and url.startswith("/"):
         url = (
-            "https://www.visitoslo.com"
+            VISIT_OSLO_BASE
             + url
         )
+
+    description_parts = []
+
+    if description:
+        description_parts.append(
+            description
+        )
+
+    if url:
+        description_parts.append("")
+        description_parts.append(
+            f"Visit Oslo: {url}"
+        )
+
+    full_description = "\n".join(
+        description_parts
+    )
 
     openings = (
         item.get("openingHours")
@@ -92,14 +111,22 @@ for item in events:
 
             try:
 
-                start_dt = None
-
                 opening_times = (
                     opening.get(
                         "openingTimes"
                     )
                     or []
                 )
+
+                closing_times = (
+                    opening.get(
+                        "closingTimes"
+                    )
+                    or []
+                )
+
+                start_dt = None
+                end_dt = None
 
                 if opening_times:
 
@@ -120,6 +147,21 @@ for item in events:
                 if not start_dt:
                     continue
 
+                if closing_times:
+
+                    end_dt = (
+                        datetime.fromisoformat(
+                            closing_times[0]
+                        )
+                    )
+
+                else:
+
+                    end_dt = (
+                        start_dt
+                        + timedelta(hours=2)
+                    )
+
                 event = Event()
 
                 event.add(
@@ -127,10 +169,10 @@ for item in events:
                     title
                 )
 
-                if description:
+                if full_description:
                     event.add(
                         "description",
-                        description
+                        full_description
                     )
 
                 if location:
@@ -146,8 +188,7 @@ for item in events:
 
                 event.add(
                     "dtend",
-                    start_dt
-                    + timedelta(hours=2)
+                    end_dt
                 )
 
                 event.add(
@@ -168,6 +209,7 @@ for item in events:
                     )
 
                 if url:
+
                     event.add(
                         "url",
                         url
@@ -193,25 +235,6 @@ for item in events:
     else:
 
         try:
-
-            event = Event()
-
-            event.add(
-                "summary",
-                title
-            )
-
-            if description:
-                event.add(
-                    "description",
-                    description
-                )
-
-            if location:
-                event.add(
-                    "location",
-                    location
-                )
 
             start = (
                 item.get("fromTime")
@@ -247,6 +270,25 @@ for item in events:
                     + timedelta(hours=2)
                 )
 
+            event = Event()
+
+            event.add(
+                "summary",
+                title
+            )
+
+            if full_description:
+                event.add(
+                    "description",
+                    full_description
+                )
+
+            if location:
+                event.add(
+                    "location",
+                    location
+                )
+
             event.add(
                 "dtstart",
                 start_dt
@@ -275,6 +317,7 @@ for item in events:
                 )
 
             if url:
+
                 event.add(
                     "url",
                     url
@@ -302,7 +345,10 @@ calendar_events.sort(
 )
 
 for _, event in calendar_events:
-    cal.add_component(event)
+
+    cal.add_component(
+        event
+    )
 
 with open(
     "docs/oslo-all.ics",
