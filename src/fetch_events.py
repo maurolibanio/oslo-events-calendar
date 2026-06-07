@@ -33,18 +33,29 @@ while True:
 
     print(f"Fetching offset={offset}")
 
-    response = requests.get(url, timeout=60)
+    response = requests.get(
+        url,
+        timeout=60
+    )
+
     response.raise_for_status()
 
     data = response.json()
 
     if total_results is None:
-        total_results = data.get("totalResults", 0)
-        print(f"Total results reported by API: {total_results}")
+        total_results = data.get(
+            "totalResults",
+            0
+        )
+
+        print(
+            f"Total results reported by API: "
+            f"{total_results}"
+        )
 
     events = data.get("events", [])
 
-    if len(events) == 0:
+    if not events:
         break
 
     all_events.extend(events)
@@ -60,6 +71,7 @@ while True:
         break
 
 output = {
+    "generatedAt": today.isoformat(),
     "totalResults": len(all_events),
     "events": all_events
 }
@@ -69,6 +81,7 @@ with open(
     "w",
     encoding="utf-8"
 ) as f:
+
     json.dump(
         output,
         f,
