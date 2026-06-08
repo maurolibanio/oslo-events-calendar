@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -46,6 +46,6 @@ jobs:
           git add docs/oslo-all.ics
           git add last-run.txt
 
-          git diff --staged --quiet || git commit -m "Update calendar"
+          git commit -m "Update calendar" --allow-empty
 
           git push
