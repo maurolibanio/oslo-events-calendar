@@ -113,15 +113,6 @@ ICS Generation
 GitHub Pages
        ↓
 Google Calendar / Apple Calendar / Outlook
-```
-
----
-
-## Contributing
-
-Suggestions, bug reports, and improvements are welcome.
-
-Please open an Issue or Pull Request.
 
 ---
 
