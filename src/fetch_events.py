@@ -31,8 +31,14 @@ OUTPUT_FILE = "events.json"
 # Scrape up to 200 pages (each = ~12 events = ~2400 total)
 MAX_PAGES = 200
 
-# Delay between jina.ai calls to be gentle
-PAGE_DELAY_SECS = 0.5
+# Delay between jina.ai calls to be gentle (jina.ai free tier rate limit)
+PAGE_DELAY_SECS = 2.0
+
+# Retry backoff delays (seconds) for 429 / transient errors
+RETRY_DELAYS = [5, 15, 30]
+
+# Stop if this many consecutive pages return zero events
+EMPTY_PAGE_LIMIT = 5
 
 # jina.ai timeout (they can be slow on large pages)
 JINA_TIMEOUT = 120
@@ -110,8 +116,11 @@ def make_slug(title):
 
 # ── Main scraping logic ────────────────────────────────────────────────────
 
-def fetch_page(page_num):
-    """Fetch one page of events via jina.ai. Returns raw markdown text."""
+def fetch_page(page_num, attempt=1):
+    """Fetch one page of events via jina.ai with optional retry.
+
+    Returns raw markdown text, or None after exhausting retries.
+    """
     if page_num == 1:
         url = JINA_BASE
     else:
@@ -123,8 +132,32 @@ def fetch_page(page_num):
         resp = requests.get(url, headers=JINA_HEADERS, timeout=JINA_TIMEOUT)
         resp.raise_for_status()
         return resp.text
+    except requests.HTTPError as e:
+        status = e.response.status_code if e.response is not None else 0
+        if status == 429:
+            if attempt <= len(RETRY_DELAYS):
+                delay = RETRY_DELAYS[attempt - 1]
+                print(f"  ⚠️  429 on page {page_num} (attempt {attempt}) — retrying in {delay}s...", flush=True)
+                time.sleep(delay)
+                return fetch_page(page_num, attempt=attempt + 1)
+            else:
+                print(f"  ❌ 429 on page {page_num} — exhausted retries, skipping.", flush=True)
+                return None
+        else:
+            print(f"  ⚠️  HTTP {status} on page {page_num}: {e}", flush=True)
+            if attempt <= len(RETRY_DELAYS):
+                delay = RETRY_DELAYS[attempt - 1]
+                print(f"     Retrying in {delay}s...", flush=True)
+                time.sleep(delay)
+                return fetch_page(page_num, attempt=attempt + 1)
+            return None
     except requests.RequestException as e:
-        print(f"  ⚠️  Error on page {page_num}: {e}", flush=True)
+        print(f"  ⚠️  Connection error on page {page_num}: {e}", flush=True)
+        if attempt <= len(RETRY_DELAYS):
+            delay = RETRY_DELAYS[attempt - 1]
+            print(f"     Retrying in {delay}s...", flush=True)
+            time.sleep(delay)
+            return fetch_page(page_num, attempt=attempt + 1)
         return None
 
 
@@ -384,23 +417,23 @@ def main():
     print(f"Pages: up to {MAX_PAGES}")
     print()
 
+    consecutive_empty = 0
+
     for page in range(1, MAX_PAGES + 1):
         markdown = fetch_page(page)
-        if markdown is None:
-            # Retry once
-            print(f"  Retrying page {page}...", flush=True)
-            time.sleep(2)
-            markdown = fetch_page(page)
 
         events = parse_page(markdown, current_year, seen_urls)
 
         if not events:
-            # Empty page = we've reached the end
-            print(f"  No events found on page {page}. Done.", flush=True)
-            break
-
-        all_events.extend(events)
-        print(f"  → {len(events)} events (total: {len(all_events)})", flush=True)
+            consecutive_empty += 1
+            print(f"  No events on page {page} ({consecutive_empty}/{EMPTY_PAGE_LIMIT} consecutive empty)", flush=True)
+            if consecutive_empty >= EMPTY_PAGE_LIMIT:
+                print(f"  {EMPTY_PAGE_LIMIT} consecutive empty pages — assuming end of results. Done.", flush=True)
+                break
+        else:
+            consecutive_empty = 0
+            all_events.extend(events)
+            print(f"  → {len(events)} events (total: {len(all_events)})", flush=True)
 
         # Gentle delay
         if page < MAX_PAGES:
