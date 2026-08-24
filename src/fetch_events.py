@@ -51,11 +51,16 @@ MONTH_MAP = {
     "september": 9, "october": 10, "november": 11, "december": 12
 }
 
-# Norwegian 3-letter months (from "24.aug" format)
+# Norwegian & English 3-letter months (from "24.aug" / "24.okt" format)
+# The site uses Norwegian abbreviations: mai, okt, des
 MONTH_SHORT = {
     "jan": 1, "feb": 2, "mar": 3, "apr": 4,
-    "may": 5, "jun": 6, "jul": 7, "aug": 8,
-    "sep": 9, "oct": 10, "nov": 11, "dec": 12
+    "may": 5, "mai": 5,  # English / Norwegian
+    "jun": 6, "jul": 7, "aug": 8,
+    "sep": 9,
+    "oct": 10, "okt": 10,  # English / Norwegian
+    "nov": 11,
+    "dec": 12, "des": 12  # English / Norwegian
 }
 
 
