@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "7 */6 * * *"
+    # Every 12h: event data changes slowly, less pressure on jina.ai rate limit
+    - cron: "7 */12 * * *"
 
 permissions:
   contents: write
@@ -27,6 +28,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Download events
+        env:
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
         run: |
           python src/fetch_events.py
 

@@ -25,14 +25,21 @@ JINA_HEADERS = {
     "Accept": "text/markdown",
     "X-Return-Format": "markdown",
 }
+# If a JINA_API_KEY env var is set, attach it as a Bearer token to unlock a
+# higher per-minute rate limit (free tier default is 20 req/min).
+_JINA_KEY = os.environ.get("JINA_API_KEY", "").strip()
+if _JINA_KEY:
+    JINA_HEADERS["Authorization"] = f"Bearer {_JINA_KEY}"
 
 OUTPUT_FILE = "events.json"
 
 # Scrape up to 200 pages (each = ~12 events = ~2400 total)
 MAX_PAGES = 200
 
-# Delay between jina.ai calls to be gentle (jina.ai free tier rate limit)
-PAGE_DELAY_SECS = 2.0
+# Delay between jina.ai calls to be gentle (jina.ai free tier rate limit).
+# Raised from 2.0s to 3.5s (~17 req/min) to stay under the 20 req/min limit and
+# avoid 429s (see 2026-08-29 diagnosis: 30 req/min previously overflowed).
+PAGE_DELAY_SECS = 3.5
 
 # Retry backoff delays (seconds) for 429 / transient errors
 RETRY_DELAYS = [5, 15, 30]
