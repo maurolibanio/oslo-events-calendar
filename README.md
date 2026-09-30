@@ -95,7 +95,7 @@ Typical synchronization delays:
 | Apple Calendar       | Usually within a few hours       |
 | Outlook              | Depends on platform and settings |
 
-As a result, newly added events may not appear immediately even though the feed itself has already been updated.
+As a result, newly added events may not appear immediately even though the feed itself has already been updated...
 
 ---
 
